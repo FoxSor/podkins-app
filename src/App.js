@@ -1,5 +1,5 @@
 import logo from "./logo.svg";
-import React, { useState }  from 'react';
+import React, { useEffect, useState }  from 'react';
 import "./App.css";
   
 const App = () => {
@@ -13,7 +13,17 @@ const App = () => {
                     setResponse(data);
                 },
             )
-            
+
+      useEffect(() => {
+        fetch(`${process.env.REACT_APP_API_URL}`)
+            .then(res => res.json())
+            .then(
+                (data) => {
+                    console.log("conecto?", data);
+                },
+            )
+      }, [])
+
       const getModels = () =>
         fetch(`${process.env.REACT_APP_API_URL}get-models`)
               .then(res => Promise.resolve(res.json().then(resp => setModels(resp))))
