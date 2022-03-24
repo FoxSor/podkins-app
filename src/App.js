@@ -1,23 +1,24 @@
 import logo from "./logo.svg";
-import React, { useState, useEffect }  from 'react';
+import React, { useState }  from 'react';
 import "./App.css";
   
 const App = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-    const [users, setUsers] = useState([]);
-    useEffect(() => {
-      fetch(process.env.REACT_APP_API_URL)
+    const [response, setResponse] = useState();
+    const [models, setModels] = useState();
+    const addModel = () =>
+      fetch(`${process.env.REACT_APP_API_URL}get-model`)
             .then(res => res.json())
             .then(
                 (data) => {
-                    setIsLoaded(true);
-                    setUsers(data);
+                    setResponse(data);
                 },
             )
-      }, [])
-
-      console.log(users)
-
+            
+      const getModels = () =>
+        fetch(`${process.env.REACT_APP_API_URL}get-models`)
+              .then(res => Promise.resolve(res.json().then(resp => setModels(resp))))
+       
+      console.log(response)
   return (
     <div className="App">
       <header className="App-header">
@@ -30,12 +31,15 @@ const App = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React asfasf
+          Learn React todos
         </a>
-        <form action="../../post" method="post" 
-              className="form">
-          <button type="submit">Connected?</button>
-        </form>
+        <button onClick={addModel}>
+          add model
+        </button>
+        <button onClick={getModels}>
+          see models
+        </button>
+        {models && models.length && (models.map((model) => <div key={model._id}> {model.nombre} </div>))}
       </header>
     </div>
   );
